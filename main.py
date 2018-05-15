@@ -18,7 +18,7 @@ def get_free_items():
         raise RuntimeError("Request returned error")
 
     json_data = json.loads(res.content)
-    free_items = [x for x in json_data['results'] if x['current_price'][0] <= 1]
+    free_items = [x for x in json_data['results'] if x['current_price'][0] == 0]
 
     return free_items
 
