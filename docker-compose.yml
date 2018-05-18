@@ -11,3 +11,7 @@ services:
     product-consumer:
         image: product-consumer
         build: ./product-consumer
+
+    slack-consumer:
+        image: slack-consumer
+        build: ./slack-consumer

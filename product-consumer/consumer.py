@@ -14,6 +14,11 @@ socket.connect("tcp://origin-producer:5557")
 
 socket.setsockopt_string(zmq.SUBSCRIBE, TOPICFILTER)
 
+print("Binding")
+sender_socket = ctx.socket(zmq.PUB)
+sender_socket.bind("tcp://*:5558")
+
+
 already_posted = set()
 
 
@@ -31,10 +36,12 @@ def filter_posted(items):
 
 def process_items(items):
     global already_posted
+    topic = b"1"
 
     items = filter_posted(items)
-
-    print(items)
+    for i in items:
+        sender_socket.send_multipart([topic, i])
+        print(f"Adding {i} to queue!")
 
 
 while True:
