@@ -14,7 +14,7 @@ socket.bind("tcp://*:5556")
 
 STORE_BASE_URL = r"https://www.humblebundle.com/store/"
 JSON_URL = r"https://www.humblebundle.com/store/api/search?sort=discount&filter=onsale&request=1&page_size=20"  # noqa
-TIMEOUT = 1
+TIMEOUT = 60
 
 
 def get_free_items():
@@ -26,6 +26,9 @@ def get_free_items():
     json_data = json.loads(res.content)
     free_items = [x for x in json_data['results']
                   if x['current_price'][0] == 0]
+
+    for i in free_items:
+        print(f"dbg: {i['human_name']}: {STORE_BASE_URL + i['human_url']}")
 
     items = [
         {
