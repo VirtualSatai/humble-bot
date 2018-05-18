@@ -9,9 +9,20 @@ services:
         build: ./origin-producer
 
     product-consumer:
+        depends_on:
+            - humble-producer
+            - origin-producer
         image: product-consumer
         build: ./product-consumer
 
     slack-consumer:
+        depends_on:
+            - product-consumer
         image: slack-consumer
         build: ./slack-consumer
+
+    twitter-consumer:
+        depends_on:
+            - product-consumer
+        image: twitter-consumer
+        build: ./twitter-consumer
