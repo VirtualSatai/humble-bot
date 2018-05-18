@@ -2,12 +2,12 @@ version: '3'
 services:
     humble-producer:
         image: humble-producer
-        build: ./humble-generator
+        build: ./humble-producer
+
+    origin-producer:
+        image: origin-producer
+        build: ./origin-producer
 
     product-consumer:
         image: product-consumer
         build: ./product-consumer
-
-    origin-producer:
-        image: origin-producer
-        build: ./origin-generator
