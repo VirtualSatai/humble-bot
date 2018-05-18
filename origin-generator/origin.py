@@ -1,11 +1,22 @@
 import json
+import time
+
+import zmq
 
 import requests
 from bs4 import BeautifulSoup
+from zmq import Context
 
 FREE_ITEMS_URL = r"https://data1.origin.com/template/store/free-games/on-the-house.en-us.dnk.directive"
 STORE_BASE = r"https://www.origin.com/dnk/en-us/store"
 ALL_URL = r"https://api4.origin.com/supercat/DK/en_DK/supercat-PCWIN_MAC-DK-en_DK.json.gz"
+TIMEOUT = 60
+
+ctx = Context()
+print("Binding")
+socket = ctx.socket(zmq.PUB)
+socket.bind("tcp://*:5557")
+
 
 def get_free_items():
     all_offers_res = requests.get(ALL_URL)
@@ -26,6 +37,10 @@ def get_free_items():
         print(f"dbg: {game_info['itemName']}: {STORE_BASE + game_path}")
         yield game_info
 
-if __name__ == "__main__":
-    for i in get_free_items():
-        print(f"i['itemName']")
+while True:
+    topic = b"1"
+    free_stuff = list(get_free_items())
+
+    message = json.dumps(free_stuff).encode("utf-8")
+    socket.send_multipart([topic, message])
+    time.sleep(TIMEOUT)
