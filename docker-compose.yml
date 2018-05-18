@@ -11,3 +11,7 @@ services:
     product-consumer:
         image: product-consumer
         build: ./product-consumer
+
+    origin-producer:
+        image: origin-producer
+        build: ./origin-generator

@@ -1,15 +1,21 @@
 import json
+
 import zmq
 from zmq import Context
+
+TOPICFILTER = "0"
 
 ctx = Context()
 
 print("Connecting to the producer")
-socket = ctx.socket(zmq.SUB)
-socket.connect("tcp://humble-producer:5556")
+humble_socket = ctx.socket(zmq.SUB)
+humble_socket.connect("tcp://humble-producer:5556")
 
-topicfilter = "0"
-socket.setsockopt_string(zmq.SUBSCRIBE, topicfilter)
+humble_socket.setsockopt_string(zmq.SUBSCRIBE, TOPICFILTER)
+
+origin_socket = ctx.socket(zmq.SUB)
+origin_socket.connect("tcp://origin-producer:5557")
+origin_socket.setsockopt_string(zmq.SUBSCRIBE, TOPICFILTER)
 
 already_posted = set()
 
@@ -35,10 +41,11 @@ def process_items(items):
 
 
 while True:
-    multipart = socket.recv_multipart()
-    topic = multipart[0]
-    messagedata = multipart[1]
+    for s in [origin_socket, humble_socket]:
+        multipart = s.recv_multipart()
+        topic = multipart[0]
+        messagedata = multipart[1]
 
-    items = json.loads(messagedata)
+        items = json.loads(messagedata)
 
-    process_items(items)
+        process_items(items)
