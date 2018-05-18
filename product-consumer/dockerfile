@@ -1,0 +1,9 @@
+FROM alpine
+
+RUN apk update && apk add python3 py-pip py3-zmq
+
+COPY . /app
+
+# RUN pip install -r /app/requirements.txt
+
+CMD ["python3", "-u", "/app/consumer.py"]

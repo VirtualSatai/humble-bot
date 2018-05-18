@@ -3,3 +3,11 @@ services:
     monolith:
         image: monolith
         build: ./monolith
+
+    humble-producer:
+        image: humble-producer
+        build: ./humble-generator
+
+    product-consumer:
+        image: product-consumer
+        build: ./product-consumer
