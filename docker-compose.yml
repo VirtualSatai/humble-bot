@@ -1,9 +1,5 @@
 version: '3'
 services:
-    monolith:
-        image: monolith
-        build: ./monolith
-
     humble-producer:
         image: humble-producer
         build: ./humble-generator

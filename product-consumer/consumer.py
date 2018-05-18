@@ -8,19 +8,16 @@ TOPICFILTER = "0"
 ctx = Context()
 
 print("Connecting to the producer")
-humble_socket = ctx.socket(zmq.SUB)
-humble_socket.connect("tcp://humble-producer:5556")
+socket = ctx.socket(zmq.SUB)
+socket.connect("tcp://humble-producer:5556")
+socket.connect("tcp://origin-producer:5557")
 
-humble_socket.setsockopt_string(zmq.SUBSCRIBE, TOPICFILTER)
-
-origin_socket = ctx.socket(zmq.SUB)
-origin_socket.connect("tcp://origin-producer:5557")
-origin_socket.setsockopt_string(zmq.SUBSCRIBE, TOPICFILTER)
+socket.setsockopt_string(zmq.SUBSCRIBE, TOPICFILTER)
 
 already_posted = set()
 
 
-def filter_posted(item):
+def filter_posted(items):
     global already_posted
 
     new_items = []
@@ -41,11 +38,10 @@ def process_items(items):
 
 
 while True:
-    for s in [origin_socket, humble_socket]:
-        multipart = s.recv_multipart()
-        topic = multipart[0]
-        messagedata = multipart[1]
+    multipart = socket.recv_multipart()
+    topic = multipart[0]
+    messagedata = multipart[1]
 
-        items = json.loads(messagedata)
+    items = json.loads(messagedata)
 
-        process_items(items)
+    process_items(items)

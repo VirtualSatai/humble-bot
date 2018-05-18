@@ -1,9 +1,8 @@
 import json
 import time
 
-import zmq
-
 import requests
+import zmq
 from bs4 import BeautifulSoup
 from zmq import Context
 
@@ -38,9 +37,10 @@ def get_free_items():
         item = {
             "name": game_info["itemName"],
             "url": STORE_BASE_URL + game_path,
-            "price": "0.0",
+            "price": [0.0, "EUR"],
         }
         yield item
+
 
 while True:
     topic = b"0"
