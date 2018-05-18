@@ -40,6 +40,8 @@ def get_free_items():
 
     return items
 
+# Wait for system to start
+time.sleep(5)
 
 while True:
     topic = b"0"
