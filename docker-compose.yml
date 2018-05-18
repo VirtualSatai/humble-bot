@@ -1,0 +1,5 @@
+version: '3'
+services:
+    monolith:
+        image: monolith
+        build: ./monolith
