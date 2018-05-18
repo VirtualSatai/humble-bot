@@ -14,7 +14,7 @@ socket.bind("tcp://*:5556")
 
 STORE_BASE_URL = r"https://www.humblebundle.com/store/"
 JSON_URL = r"https://www.humblebundle.com/store/api/search?sort=discount&filter=onsale&request=1&page_size=20"  # noqa
-TIMEOUT = 60
+TIMEOUT = 1
 
 
 def get_free_items():
@@ -27,7 +27,15 @@ def get_free_items():
     free_items = [x for x in json_data['results']
                   if x['current_price'][0] == 0]
 
-    return free_items
+    items = [
+        {
+            "name": x["human_name"],
+            "url": STORE_BASE_URL + x["human_url"],
+            "price": x["current_price"],
+        } for x in free_items
+    ]
+
+    return items
 
 
 while True:
@@ -37,4 +45,4 @@ while True:
 
     message = json.dumps(free_stuff).encode("utf-8")
     socket.send_multipart([topic, message])
-    time.sleep(.1)
+    time.sleep(TIMEOUT)
