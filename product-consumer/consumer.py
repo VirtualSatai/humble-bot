@@ -40,7 +40,8 @@ def process_items(items):
 
     items = filter_posted(items)
     for i in items:
-        sender_socket.send_multipart([topic, i])
+        message = json.dumps(i).encode("utf-8")
+        sender_socket.send_multipart([topic, message])
         print(f"Adding {i} to queue!")
 
 
